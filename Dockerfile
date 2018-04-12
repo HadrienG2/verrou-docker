@@ -17,32 +17,36 @@ RUN zypper in -y git patch make perl python
 RUN svn co --quiet svn://svn.valgrind.org/valgrind/tags/VALGRIND_3_13_0 valgrind
 
 # Download verrou (currently using v1.1.0) and patch valgrind
-RUN cd valgrind
-RUN git clone --branch=v1.1.0 --single-branch https://github.com/edf-hpc/verrou.git verrou
-RUN patch -p0 < verrou/valgrind.diff
+RUN cd valgrind                                                                \
+    && git clone --branch=v1.1.0 --single-branch                               \
+                 https://github.com/edf-hpc/verrou.git verrou                  \
+    && patch -p0 < verrou/valgrind.diff
 
 # Configure valgrind
 #
 # NOTE: You may need to remove the --enable-verrou-fma switch if you are using
-# an old CPU or virtual machine
+#       an old CPU or virtual machine
 #
-RUN ./autogen.sh
-RUN ./configure --enable-only64bit --enable-verrou-fma=yes
+RUN cd valgrind                                                                \
+    && ./autogen.sh                                                            \
+    && ./configure --enable-only64bit --enable-verrou-fma=yes
 
 # Build and install valgrind
-RUN make -j8
-RUN make install
+RUN cd valgrind                                                                \
+    && make -j8                                                                \
+    && make install
 
-# Run the tests
-RUN make -C tests check
-RUN make -C verrou check
-RUN perl tests/vg_regtest verrou
-RUN make -C verrou/unitTest
+# Run the verrou test suite to check that everything is fine
+RUN cd valgrind                                                                \
+    && make -C tests check                                                     \
+    && make -C verrou check                                                    \
+    && perl tests/vg_regtest verrou                                            \
+    && make -C verrou/unitTest
 
 # Clean up after ourselves
 #
-# NOTE: You may want to skip this step if you want to hack on verrou itself
+# NOTE: This step optimizes container size at the expense of hackability, feel
+#       free to alter or remove it if your use case is different from mine.
 #
-RUN cd ..
-RUN rm -rf valgrind
-RUN zypper clean
+RUN rm -rf valgrind                                                            \
+    && zypper clean
