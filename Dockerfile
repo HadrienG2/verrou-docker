@@ -1,5 +1,7 @@
 FROM opensuse:tumbleweed
 LABEL Description="openSUSE Tumbleweed with Verrou installed" Version="0.1"
+CMD bash
+
 
 # Update the host system
 RUN zypper ref && zypper dup -y
