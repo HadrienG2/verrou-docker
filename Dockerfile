@@ -1,5 +1,5 @@
 FROM opensuse:tumbleweed
-LABEL Description="openSUSE Tumbleweed with Verrou installed" Version="0.1"
+LABEL Description="openSUSE Tumbleweed with Verrou installed" Version="2.0"
 CMD bash
 
 
