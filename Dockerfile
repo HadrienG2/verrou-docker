@@ -13,7 +13,7 @@ RUN zypper in -y valgrind valgrind-devel && zypper rm -y valgrind valgrind-devel
 RUN zypper in -y subversion automake gcc gcc-c++ which
 
 # Install verrou's additional build prerequisites
-RUN zypper in -y git patch make perl python
+RUN zypper in -y git patch make python
 
 # Downloa correct version of the valgrind source for verrou's patch
 RUN svn co --quiet svn://svn.valgrind.org/valgrind/tags/VALGRIND_3_13_0 valgrind
