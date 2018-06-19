@@ -15,12 +15,12 @@ RUN zypper in -y subversion automake gcc gcc-c++ which
 # Install verrou's additional build prerequisites
 RUN zypper in -y git patch make perl python
 
-# Download the valgrind source code (currently using v3.13.0)
+# Downloa correct version of the valgrind source for verrou's patch
 RUN svn co --quiet svn://svn.valgrind.org/valgrind/tags/VALGRIND_3_13_0 valgrind
 
-# Download verrou (currently using v1.1.0) and patch valgrind
+# Download verrou and patch valgrind
 RUN cd valgrind                                                                \
-    && git clone --branch=v1.1.0 --single-branch                               \
+    && git clone --branch=v2.0.0 --depth 1                                     \
                  https://github.com/edf-hpc/verrou.git verrou                  \
     && patch -p0 < verrou/valgrind.diff
 
